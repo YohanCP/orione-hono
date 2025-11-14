@@ -11,4 +11,7 @@ app.get("/", (c) => {
   return c.text(welcomeStrings.join("\n\n"));
 });
 
+app.get("/about", (c) => {
+  return c.text('Anjaye')
+})
 export default app;
