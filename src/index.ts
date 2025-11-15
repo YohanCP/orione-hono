@@ -1,6 +1,10 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception"
+import { hashPassword } from "./utils/auth";
+import { db } from "./db/client";
+import { users } from "./db/schema";
 
-const app = new Hono();
+const app = new Hono().basePath('/api');
 
 const welcomeStrings = [
   `Hello Hono from Bun ${process.versions.bun}!`,
@@ -15,6 +19,38 @@ app.get("/about", (c) => {
   return c.text('Anjaye')
 })
 
+app.post('/register', async (c) => {
+  const { email, password } = await c.req.json();
+
+  if (!email || !password) {
+    throw new HTTPException(400, { message: "Email and password are required"});
+  }
+
+  const passwordHash = await hashPassword(password);
+
+  try {
+    const [registeredUser] = await db.insert(users)
+      .values({
+        email,
+        password: passwordHash,
+      })
+      .returning({
+        id: users.id,
+        email: users.email,
+        createdAt: users.createdAt,
+      });
+    return c.json({
+      message: 'User registered successfully',
+      user: registeredUser
+    }, 201);
+  } catch (error: any){
+    if (error.code === '23505'){
+      throw new HTTPException(409, { message: 'Email is already registered' });
+    }
+    console.error('Database error:', error);
+    throw new HTTPException(500, { message: 'Internal server error,' });
+  }
+});
 
 
 export default app;
