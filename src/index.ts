@@ -4,7 +4,7 @@ import { hashPassword } from "./utils/auth";
 import { db } from "./db/client";
 import { users } from "./db/schema";
 
-const app = new Hono().basePath('/api');
+const app = new Hono();
 
 const welcomeStrings = [
   `Hello Hono from Bun ${process.versions.bun}!`,
