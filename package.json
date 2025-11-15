@@ -17,6 +17,8 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "dev": "src/index.ts"
+    "start": "bun run ./src/index.ts",
+    "db-reset": "bunx drizzle-kit push --config=./drizzle-empty.config.ts --force",
+    "db-push": "bun drizzle-kit push"
   }
 }
