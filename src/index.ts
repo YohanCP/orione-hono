@@ -3,6 +3,7 @@ import { HTTPException } from "hono/http-exception"
 import { hashPassword } from "./utils/auth";
 import { db } from "./db/client";
 import { users } from "./db/schema";
+import { cors } from "hono/cors"
 
 const app = new Hono();
 
@@ -10,6 +11,12 @@ const welcomeStrings = [
   `Hello Hono from Bun ${process.versions.bun}!`,
   "To learn more about Hono + Bun on Vercel, visit https://vercel.com/docs/frameworks/backend/hono",
 ];
+
+app.use('*', cors({
+  origin: '*',
+  allowMethods: ['POST', 'GET', 'OPTIONS'],
+  allowHeaders: ['Content-Type'],
+}))
 
 app.get("/", (c) => {
   return c.text(welcomeStrings.join("\n\n"));
