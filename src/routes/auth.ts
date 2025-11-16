@@ -9,7 +9,7 @@ import { createToken } from "../utils/jwt";
 const authRouter = new Hono();
 
 authRouter.post('/register', async (c) => {
-  const { email, password } = await c.req.json();
+  const { username, email, password, } = await c.req.json();
 
   if (!email || !password) {
     throw new HTTPException(400, { message: "Email and password are required"});
@@ -20,11 +20,13 @@ authRouter.post('/register', async (c) => {
   try {
     const [registeredUser] = await db.insert(users)
       .values({
+        username,
         email,
         password: passwordHash,
       })
       .returning({
         id: users.id,
+        username: users.username,
         email: users.email,
         createdAt: users.createdAt,
       });
