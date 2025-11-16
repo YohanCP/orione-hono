@@ -11,17 +11,20 @@ const authRouter = new Hono();
 authRouter.post('/register', async (c) => {
   const { username, email, password, } = await c.req.json();
 
+  const lowerEmail = email.toLowerCase().trim();
+  const lowerUsername = username.toLowerCase().trim();
+  const passwordHash = await hashPassword(password);
+
+
   if (!username || !email || !password) {
     throw new HTTPException(400, { message: "All field required!"});
   }
 
-  const passwordHash = await hashPassword(password);
-
   try {
     const [registeredUser] = await db.insert(users)
       .values({
-        username,
-        email,
+        username: lowerUsername,
+        email: lowerEmail,
         password: passwordHash,
       })
       .returning({
@@ -55,6 +58,7 @@ authRouter.post('/register', async (c) => {
 
 authRouter.post('/login', async(c) => {
     const { email, password } = await c.req.json();
+    const lowerEmail = email.toLowerCase().trim();
 
     if (!email || !password) {
         throw new HTTPException(400, { message: "Email and password are required!"});
@@ -63,7 +67,7 @@ authRouter.post('/login', async(c) => {
     try {
         const userRecords = await db.select()
             .from(users)
-            .where(eq(users.email, email))
+            .where(eq(users.email, lowerEmail))
             .limit(1);
         
         const user = userRecords[0];
