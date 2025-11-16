@@ -21,6 +21,7 @@
     "start": "bun run ./src/index.ts",
     "db-reset": "bunx drizzle-kit push --config=./drizzle-empty.config.ts --force",
     "db-migrate": "bun drizzle-kit migrate",
-    "db-push": "bun drizzle-kit push"
+    "db-push": "bun drizzle-kit push",
+    "db-generate": "bun drizzle-kit generate"
   }
 }
