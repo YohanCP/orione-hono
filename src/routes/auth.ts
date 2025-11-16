@@ -11,8 +11,8 @@ const authRouter = new Hono();
 authRouter.post('/register', async (c) => {
   const { username, email, password, } = await c.req.json();
 
-  if (!email || !password) {
-    throw new HTTPException(400, { message: "Email and password are required"});
+  if (!username || !email || !password) {
+    throw new HTTPException(400, { message: "All field required!"});
   }
 
   const passwordHash = await hashPassword(password);
@@ -36,7 +36,17 @@ authRouter.post('/register', async (c) => {
     }, 201);
   } catch (error: any){
     if (error.code === '23505'){
-      throw new HTTPException(409, { message: 'Email is already registered' });
+      const detail = error.detail || error.message || '';
+      let errorMessage = 'An account with this email or username already exists.';
+
+      if (detail.includes('users_email_unique')) {
+        errorMessage = 'The email address is already registered!';
+      } else if (detail.includes('users_username_unique')) {
+        errorMessage = 'The chosen username is already taken.';
+      }
+
+      throw new HTTPException(409, { message: errorMessage });
+
     }
     console.error('Database error:', error);
     throw new HTTPException(500, { message: 'Internal server error,' });
