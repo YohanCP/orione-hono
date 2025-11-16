@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, boolean, uniqueIndex, pgEnum } from "drizzle-orm/pg-core";
 
-export const accountType = pgEnum('user_accountType',['user', 'seller']);
+export const accountType = pgEnum('user_role',['user', 'seller']);
 
 export const users = pgTable(
   "users",
@@ -11,7 +11,7 @@ export const users = pgTable(
     email: text("email").notNull(),
     password: text("password").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
-    accountType: accountType('accountType').notNull().default('user'),
+    role: accountType('role').notNull().default('user'),
     isValidated: boolean("is_validated").default(false).notNull(),
   },
   (table) => ({
