@@ -1,15 +1,15 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import app from "..";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../utils/auth";
 import { eq } from "drizzle-orm";
+import { createToken } from "../utils/jwt";
 
-const auth = new Hono();
+const authRouter = new Hono();
 
-app.post('/register', async (c) => {
-  const { email, password } = await c.req.json();
+authRouter.post('/register', async (c) => {
+  const { username, email, password, } = await c.req.json();
 
   if (!email || !password) {
     throw new HTTPException(400, { message: "Email and password are required"});
@@ -20,11 +20,13 @@ app.post('/register', async (c) => {
   try {
     const [registeredUser] = await db.insert(users)
       .values({
+        username,
         email,
         password: passwordHash,
       })
       .returning({
         id: users.id,
+        username: users.username,
         email: users.email,
         createdAt: users.createdAt,
       });
@@ -41,7 +43,7 @@ app.post('/register', async (c) => {
   }
 });
 
-app.post('/login', async(c) => {
+authRouter.post('/login', async(c) => {
     const { email, password } = await c.req.json();
 
     if (!email || !password) {
@@ -66,9 +68,12 @@ app.post('/login', async(c) => {
             throw new HTTPException(401, { message: "Invalid password!" });
         }
 
+        const token = await createToken(user.id, user.email);
+
         return c.json({
-            message: 'Login Successful!',
-        }, 200)
+            message: 'Login successful!',
+            token: token,
+        }, 200);
 
     } catch (error: any) {
         if (error instanceof HTTPException){
@@ -79,4 +84,4 @@ app.post('/login', async(c) => {
     }
 });
 
-export default auth;
+export default authRouter;
