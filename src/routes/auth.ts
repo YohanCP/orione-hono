@@ -1,0 +1,82 @@
+import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
+import app from "..";
+import { db } from "../db/client";
+import { users } from "../db/schema";
+import { hashPassword, verifyPassword } from "../utils/auth";
+import { eq } from "drizzle-orm";
+
+const auth = new Hono();
+
+app.post('/register', async (c) => {
+  const { email, password } = await c.req.json();
+
+  if (!email || !password) {
+    throw new HTTPException(400, { message: "Email and password are required"});
+  }
+
+  const passwordHash = await hashPassword(password);
+
+  try {
+    const [registeredUser] = await db.insert(users)
+      .values({
+        email,
+        password: passwordHash,
+      })
+      .returning({
+        id: users.id,
+        email: users.email,
+        createdAt: users.createdAt,
+      });
+    return c.json({
+      message: 'User registered successfully',
+      user: registeredUser
+    }, 201);
+  } catch (error: any){
+    if (error.code === '23505'){
+      throw new HTTPException(409, { message: 'Email is already registered' });
+    }
+    console.error('Database error:', error);
+    throw new HTTPException(500, { message: 'Internal server error,' });
+  }
+});
+
+app.post('/login', async(c) => {
+    const { email, password } = await c.req.json();
+
+    if (!email || !password) {
+        throw new HTTPException(400, { message: "Email and password are required!"});
+    }
+
+    try {
+        const userRecords = await db.select()
+            .from(users)
+            .where(eq(users.email, email))
+            .limit(1);
+        
+        const user = userRecords[0];
+
+        if (!user){
+            throw new HTTPException(401, { message: "User does not exist!" });
+        }
+
+        const passwordMatch = await verifyPassword(password, user.password)
+
+        if (!passwordMatch){
+            throw new HTTPException(401, { message: "Invalid password!" });
+        }
+
+        return c.json({
+            message: 'Login Successful!',
+        }, 200)
+
+    } catch (error: any) {
+        if (error instanceof HTTPException){
+            throw error;
+        }
+        console.error('Login error', error);
+        throw new HTTPException(500, { message: "Internal server error!" });
+    }
+});
+
+export default auth;
