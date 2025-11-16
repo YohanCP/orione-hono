@@ -6,7 +6,7 @@ import { users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../utils/auth";
 import { eq } from "drizzle-orm";
 
-const auth = new Hono();
+export const auth = new Hono();
 
 app.post('/register', async (c) => {
   const { email, password } = await c.req.json();
@@ -78,5 +78,3 @@ app.post('/login', async(c) => {
         throw new HTTPException(500, { message: "Internal server error!" });
     }
 });
-
-export default auth;
