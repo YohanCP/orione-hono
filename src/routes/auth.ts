@@ -4,6 +4,7 @@ import { db } from "../db/client";
 import { users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../utils/auth";
 import { eq } from "drizzle-orm";
+import { createToken } from "../utils/jwt";
 
 const authRouter = new Hono();
 
@@ -65,9 +66,12 @@ authRouter.post('/login', async(c) => {
             throw new HTTPException(401, { message: "Invalid password!" });
         }
 
+        const token = await createToken(user.id, user.email);
+
         return c.json({
-            message: 'Login Successful!',
-        }, 200)
+            message: 'Login successful!',
+            token: token,
+        }, 200);
 
     } catch (error: any) {
         if (error instanceof HTTPException){
