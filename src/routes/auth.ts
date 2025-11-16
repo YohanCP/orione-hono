@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { db } from "../db/client";
-import { users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../utils/auth";
 import { eq } from "drizzle-orm";
 import { createToken } from "../utils/jwt";
-import { setCookie } from 'hono/cookie'
+import { setCookie } from 'hono/cookie';
+import { users } from "../db/schema";
 
 const authRouter = new Hono();
 
