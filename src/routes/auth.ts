@@ -5,6 +5,7 @@ import { users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../utils/auth";
 import { eq } from "drizzle-orm";
 import { createToken } from "../utils/jwt";
+import { setCookie } from 'hono/cookie'
 
 const authRouter = new Hono();
 
@@ -84,9 +85,16 @@ authRouter.post('/login', async(c) => {
 
         const token = await createToken(user.id, user.email);
 
+        setCookie(c, 'auth_token', token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 60 * 60 * 24 * 1,
+            path: '/',
+            sameSite: 'Lax'
+        })
+
         return c.json({
             message: 'Login successful!',
-            token: token,
         }, 200);
 
     } catch (error: any) {
