@@ -1,14 +1,13 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import app from "..";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { hashPassword, verifyPassword } from "../utils/auth";
 import { eq } from "drizzle-orm";
 
-export const auth = new Hono();
+const authRouter = new Hono();
 
-app.post('/register', async (c) => {
+authRouter.post('/register', async (c) => {
   const { email, password } = await c.req.json();
 
   if (!email || !password) {
@@ -41,7 +40,7 @@ app.post('/register', async (c) => {
   }
 });
 
-app.post('/login', async(c) => {
+authRouter.post('/login', async(c) => {
     const { email, password } = await c.req.json();
 
     if (!email || !password) {
@@ -78,3 +77,5 @@ app.post('/login', async(c) => {
         throw new HTTPException(500, { message: "Internal server error!" });
     }
 });
+
+export default authRouter;

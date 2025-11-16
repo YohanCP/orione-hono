@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors"
-import { auth } from "./routes/auth";
+import authRouter from "./routes/auth";
 
 const app = new Hono();
 
@@ -30,6 +30,6 @@ app.get("/about", (c) => {
   return c.text('Anjaye')
 })
 
-app.route('/', auth)
+app.route('/', authRouter)
 
 export default app;
