@@ -10,17 +10,19 @@ const welcomeStrings = [
 ];
 
 const allowedOrigins = [
-  // 'https://orionetech.vercel.app',
+  'https://orionetech.vercel.app',
+
+  // Development build
   // 'https://localhost:3000',
   // 'https://localhost:3001',
-  '*',
+  // '*',
 ]
 
 app.use('*', cors({
   origin: allowedOrigins,
   allowMethods: ['POST', 'GET', 'OPTIONS'],
   allowHeaders: ['Content-Type'],
-}))
+}));
 
 app.get("/", (c) => {
   return c.text(welcomeStrings.join("\n\n"));
@@ -29,6 +31,7 @@ app.get("/", (c) => {
 app.get("/about", (c) => {
   return c.text('Anjaye')
 })
+
 
 app.route('/', authRouter)
 
