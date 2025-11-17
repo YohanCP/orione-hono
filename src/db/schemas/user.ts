@@ -1,5 +1,6 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, boolean, uniqueIndex, pgEnum } from "drizzle-orm/pg-core";
+import { products } from "./products";
 
 export const userRoleEnum = pgEnum('user_role', ['user', 'seller']);
 
@@ -23,6 +24,10 @@ export const users = pgTable(
     ),
   })
 );
+
+export const userRelations = relations(users, ({ many }) => ({
+  products: many(products),
+}));
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

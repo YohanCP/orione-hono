@@ -10,9 +10,9 @@ const welcomeStrings = [
 ];
 
 const allowedOrigins = [
-  // 'https://orionetech.vercel.app',
-  // 'https://localhost:3000',
-  // 'https://localhost:3001',
+  'https://orionetech.vercel.app',
+  'https://localhost:3000',
+  'https://localhost:3001',
   '*',
 ]
 
