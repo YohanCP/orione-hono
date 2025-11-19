@@ -20,7 +20,7 @@ const allowedOrigins = [
 app.use('*', cors({
   origin: allowedOrigins,
   allowMethods: ['POST', 'GET', 'OPTIONS'],
-  allowHeaders: ['Content-Type'],
+  allowHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.get("/", (c) => {
