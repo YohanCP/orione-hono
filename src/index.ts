@@ -10,12 +10,11 @@ const welcomeStrings = [
 ];
 
 const allowedOrigins = [
-  'https://orionetech.vercel.app',
-
+  // 'https://orionetech.vercel.app',
   // Development build
   // 'https://localhost:3000',
   // 'https://localhost:3001',
-  // '*',
+  '*',
 ]
 
 app.use('*', cors({
