@@ -7,4 +7,8 @@ export const schema = {
 }
 
 export const users = userSchema.users;
+export const products = productSchema.products;
+
+
 export type { User, NewUser } from './schemas/user'
+export type { Product, NewProduct } from './schemas/products'

@@ -6,8 +6,12 @@ import { eq } from "drizzle-orm";
 import { createToken } from "../utils/jwt";
 import { setCookie } from 'hono/cookie';
 import { users } from "../db/schema";
+import { sanitizeJsonMiddleware } from "../middleware/sanitize";
 
 const authRouter = new Hono();
+
+authRouter.use('/register', sanitizeJsonMiddleware());
+authRouter.use('/login', sanitizeJsonMiddleware());
 
 authRouter.post('/register', async (c) => {
   const { username, email, password, } = await c.req.json();
@@ -15,7 +19,6 @@ authRouter.post('/register', async (c) => {
   const lowerEmail = email.toLowerCase().trim();
   const lowerUsername = username.toLowerCase().trim();
   const passwordHash = await hashPassword(password);
-
 
   if (!username || !email || !password) {
     throw new HTTPException(400, { message: "All field required!"});
