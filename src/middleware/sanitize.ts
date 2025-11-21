@@ -7,6 +7,7 @@ export const sanitizeJsonMiddleware = (): MiddlewareHandler => {
             const body = await c.req.json();
             
             // Secara rekursif, sanitasi semua field "string"
+            // Recursively sanitize all field that is "String"
             const sanitizeObject = (obj: any): any => {
                 if (typeof obj === "string") {
                     return sanitize(obj, {ALLOWED_TAGS: []});

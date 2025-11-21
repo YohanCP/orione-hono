@@ -15,6 +15,7 @@ export const products = pgTable(
         createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
+// Relation made for linking user to products
 export const productRelations = relations(products, ({ one }) => ({
     seller: one(users, {
         fields: [products.sellerId],
