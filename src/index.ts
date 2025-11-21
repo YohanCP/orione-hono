@@ -9,17 +9,18 @@ const welcomeStrings = [
   "To learn more about Hono + Bun on Vercel, visit https://vercel.com/docs/frameworks/backend/hono",
 ];
 
-// const allowedOrigins = [
-//   // 'https://orionetech.vercel.app',
-//   // Development build
-//   // 'https://localhost:3000',
-//   // 'https://localhost:3001',
-//   '*',
-// ]
+// For development, use localhost
+const allowedOrigins = [
+  // 'https://orionetech.vercel.app',
+  // Development build
+  // 'https://localhost:3000',
+  'https://localhost:3001',
+  // '*',
+]
 
 app.use('*', cors({
   // origin: allowedOrigins,
-  origin: '*',
+  origin: allowedOrigins,
   allowMethods: ['POST', 'GET', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -27,11 +28,6 @@ app.use('*', cors({
 app.get("/", (c) => {
   return c.text(welcomeStrings.join("\n\n"));
 });
-
-app.get("/about", (c) => {
-  return c.text('Anjaye')
-})
-
 
 app.route('/', authRouter)
 

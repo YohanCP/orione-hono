@@ -11,10 +11,12 @@ export const users = pgTable(
     username: text("username").notNull(),
     email: text("email").notNull(),
     password: text("password").notNull(),
+
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     role: userRoleEnum('role').notNull().default('user'),
     isValidated: boolean("is_validated").default(false).notNull(),
   },
+  // _unique to make sure there's only one unique username and email regarding it's writing in lower-case or else.
   (table) => ({
     usernameIdx: uniqueIndex("users_username_unique").on(
       sql`lower(${table.username})`

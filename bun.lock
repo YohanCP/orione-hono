@@ -6,6 +6,7 @@
       "name": "hono",
       "dependencies": {
         "@neondatabase/serverless": "^1.0.2",
+        "crypto": "^1.0.1",
         "csp": "^0.0.1-alpha1",
         "dotenv": "^17.2.3",
         "drizzle-orm": "^0.44.7",
@@ -122,6 +123,8 @@
     "buffer-from": ["buffer-from@1.1.2", "", {}, "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="],
 
     "bun-types": ["bun-types@1.3.1", "", { "dependencies": { "@types/node": "*" }, "peerDependencies": { "@types/react": "^19" } }, "sha512-NMrcy7smratanWJ2mMXdpatalovtxVggkj11bScuWuiOoXTiKIu2eVS1/7qbyI/4yHedtsn175n4Sm4JcdHLXw=="],
+
+    "crypto": ["crypto@1.0.1", "", {}, "sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig=="],
 
     "csp": ["csp@0.0.1-alpha1", "", {}, "sha512-rx3CiD/Vi3BdZ+3sNKKN63Ue/MsXu9WOlK3SBjzSItKEUd6o5SlEfyrcCu409d1EVkNL71HQB2xSTdqdkspE5g=="],
 
